@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class CourseBusinessMockTest {
@@ -43,4 +44,24 @@ public class CourseBusinessMockTest {
 
         assertEquals(4, filteredCourses.size());
     }
+
+    @Test
+    void givenNullArgument_WhenRetrieveCoursesRelatedToSpring_ShouldThrowIllegalArgumentException(){
+
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class,
+                () -> business.retrieveCoursesRelatedToSpring(null));
+
+        assertEquals("Student cannot be null", thrown.getMessage());
+    }
+
+    @Test
+    void testDeleteCoursesNotRelatedToSpring_UsingMockitoVerify_ShouldCallMethod_deleteCourse(){
+        when(mockService.retriveCourses("Leandro")).thenReturn(courses);
+
+        business.deleteCoursesNotRelatedToSpring("Leandro");
+
+        verify(mockService).deleteCourse("Agile Desmistificado com Scrum, XP, Kanban e Trello");
+        verify(mockService, never()).deleteCourse("Microsserviços do 0 com Spring Cloud, Kotlin e Docker");
+    }
+
 }

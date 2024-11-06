@@ -16,6 +16,10 @@ public class CourseBusiness {
 
     public List<String> retrieveCoursesRelatedToSpring(String student){
 
+        if(student == null){
+            throw new IllegalArgumentException("Student cannot be null");
+        }
+
         var filteredCourses = new ArrayList<String>();
         var allCourses = courseService.retriveCourses(student);
 
@@ -25,5 +29,15 @@ public class CourseBusiness {
             }
         }
         return filteredCourses;
+    }
+
+    public void deleteCoursesNotRelatedToSpring(String student){
+        var allCourses = courseService.retriveCourses(student);
+
+        for(String course : allCourses){
+            if(!course.contains("Spring")){
+                courseService.deleteCourse(course);
+            }
+        }
     }
 }
